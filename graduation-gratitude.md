@@ -89,7 +89,7 @@ description: 回顾学习生涯，感恩师长友人，展望未来人生
 ### 🎬 难忘时刻
 
 <div class="video-container">
-  <iframe src="/video/gb蹦.mp4" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+  <iframe src="/bygn/video/gb蹦.mp4" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
 </div>
 
 [//]: # (<div class="video-container">)
