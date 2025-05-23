@@ -8,13 +8,13 @@ import { ref } from 'vue';
 const musicTracks = ref([
   {
     title: '恩典之路',
-    url: 'http://121.199.21.194:3000/music_files/恩典之路.mp3', // 替换为您的音乐文件 API 地址
-    lyricsUrl: '/lyrics/恩典之路.lrc' // 指向本地歌词文件
+    url: '/sg/恩典之路.mp3', 
+    lyricsUrl: '/lyrics/恩典之路.lrc' 
   },
   {
     title: '同路人',
-    url: 'http://121.199.21.194:3000/music_files/同路人.mp3', // 替换为您的音乐文件 API 地址
-    lyricsUrl: '/lyrics/同路人.lrc' // 指向本地歌词文件
+    url: '/sg/同路人.mp3', 
+    lyricsUrl: '/lyrics/同路人.lrc' 
   }
 ]);
 </script>
