@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: '/bygn/',
   lang:"zh-CN",
   title: "SmallHouse",
   description: "小家之好，大抵如此。不在于方寸之大小，而在于居者之心境",
