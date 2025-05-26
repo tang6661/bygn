@@ -89,7 +89,7 @@ description: 回顾学习生涯，感恩师长友人，展望未来人生
 ### 🎬 难忘时刻
 
 <div class="video-container">
-  <iframe src="/bygn/video/gb蹦.mp4" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+  <iframe src="/bygn/video/gb蹦.mp4?autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
 </div>
 
 [//]: # (<div class="video-container">)
@@ -199,6 +199,8 @@ description: 回顾学习生涯，感恩师长友人，展望未来人生
   <!-- 可以添加更多留言 -->
 </div>
 
+
+
 <!-- 自定义样式 -->
 <style>
 /* 照片网格布局 */
@@ -214,6 +216,7 @@ description: 回顾学习生涯，感恩师长友人，展望未来人生
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  cursor: pointer; /* 添加指针样式表示可点击 */
 }
 
 .image-item:hover {
@@ -379,4 +382,5 @@ description: 回顾学习生涯，感恩师长友人，展望未来人生
   font-size: 0.85rem;
   color: #888;
 }
-</style> 
+
+</style>
