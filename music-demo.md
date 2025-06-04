@@ -15,6 +15,31 @@ const musicTracks = ref([
     title: '同路人',
     url: '/bygn/sg/同路人.mp3', 
     lyricsUrl: '/bygn/lyrics/同路人.lrc' 
+  },
+{
+    title: '祝福',
+    url: '/bygn/sg/《祝福》.mp3', 
+    lyricsUrl: '/bygn/lyrics/《祝福》.lrc' 
+  },
+{
+    title: '同路人(1)',
+    url: '/bygn/sg/同路人(1).mp3', 
+    lyricsUrl: '/bygn/lyrics/同路人(1).lrc' 
+  },
+{
+    title: '第72首',
+    url: '/bygn/sg/第72首.mp3', 
+    lyricsUrl: '/bygn/lyrics/第72首.lrc' 
+  },
+{
+    title: '第260首',
+    url: '/bygn/sg/第260首.mp3', 
+    lyricsUrl: '/bygn/lyrics/第260首.lrc' 
+  },
+{
+    title: '第265首',
+    url: '/bygn/sg/第265首.mp3', 
+    lyricsUrl: '/bygn/lyrics/第265首.lrc' 
   }
 ]);
 </script>
