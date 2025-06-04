@@ -1,3 +1,14 @@
+---
+title: 音乐播放器
+description: 毕业感恩诗歌
+head:
+  - - meta
+    - name: theme-color
+      content: "#ffffff"
+---
+
+# 毕业感恩诗歌
+
 <ClientOnly>
   <MusicPlayer :tracks="musicTracks" />
 </ClientOnly>
@@ -40,10 +51,25 @@ const musicTracks = ref([
     title: '第265首',
     url: '/bygn/sg/第265首.mp3', 
     lyricsUrl: '/bygn/lyrics/第265首.lrc' 
-  }
+  },
 ]);
 </script>
 
 <style>
-/* 您可以在这里添加一些页面特定的样式 */
+.VPDoc {
+  background-color: #ffffff;
+}
+
+.VPDoc h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+@media (max-width: 640px) {
+  .VPDoc h1 {
+    font-size: 1.5rem;
+  }
+}
 </style>
