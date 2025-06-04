@@ -210,6 +210,11 @@ const scrollToActiveLyric = (index) => {
         // 检查是否接近歌词末尾（最后5行）
         const isNearEnd = index >= currentLyrics.value.length - 5;
         
+        // 检查是否处于全屏模式
+        const isInFullscreen = !!document.fullscreenElement || 
+                              !!document.webkitFullscreenElement || 
+                              !!document.msFullscreenElement;
+        
         if (isNearEnd) {
           // 如果接近末尾，确保能看到最后几行
           const lastElement = lyricLines.value[currentLyrics.value.length - 1];
@@ -220,7 +225,12 @@ const scrollToActiveLyric = (index) => {
           }
         } else {
           // 正常滚动
-          scrollPosition = element.offsetTop - containerRect.height / 4;
+          // 在全屏模式下，调整滚动位置使歌词更居中
+          if (isInFullscreen) {
+            scrollPosition = element.offsetTop - containerRect.height / 3;
+          } else {
+            scrollPosition = element.offsetTop - containerRect.height / 4;
+          }
         }
         
         container.scrollTo({
@@ -406,13 +416,23 @@ const returnToList = () => {
 const adjustLyricsContainer = () => {
   nextTick(() => {
     if (lyricsContainer.value) {
+      // 检查是否处于全屏模式
+      const isInFullscreen = !!document.fullscreenElement || 
+                            !!document.webkitFullscreenElement || 
+                            !!document.msFullscreenElement;
+      
       // 确保歌词容器有足够的高度
       const containerHeight = lyricsContainer.value.clientHeight;
       const parentHeight = lyricsContainer.value.parentElement.clientHeight;
       
       // 设置最小高度，确保滚动正常工作
       if (containerHeight < parentHeight) {
-        lyricsContainer.value.style.minHeight = `${parentHeight}px`;
+        if (isInFullscreen) {
+          // 全屏模式下使用更大的最小高度
+          lyricsContainer.value.style.minHeight = `${parentHeight * 1.2}px`;
+        } else {
+          lyricsContainer.value.style.minHeight = `${parentHeight}px`;
+        }
       }
     }
   });
@@ -451,6 +471,13 @@ const handleFullscreenChange = () => {
                        !!document.webkitFullscreenElement || 
                        !!document.msFullscreenElement;
 };
+
+// 监听全屏变化，调整容器
+watch(isFullscreen, () => {
+  nextTick(() => {
+    adjustLyricsContainer();
+  });
+});
 
 // 点击外部关闭菜单
 const handleClickOutside = (event) => {
@@ -738,7 +765,7 @@ onUnmounted(() => {
   height: 100%;
   overflow-y: auto;
   text-align: center;
-  padding: 20px 20px 120px 20px;
+  padding: 30px 20px 150px 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -754,25 +781,31 @@ onUnmounted(() => {
 }
 
 .lyrics p:last-child {
-  margin-bottom: 80px;
+  margin-bottom: 100px;
 }
 
 .lyrics p {
-  margin: 16px 0;
-  color: #888;
-  font-size: 1rem;
+  margin: 20px 0;
+  color: #666;
+  font-size: 1.2rem;
   transition: all 0.3s ease;
-  opacity: 0.6;
+  opacity: 0.7;
   padding: 0 20px;
-  line-height: 1.5;
+  line-height: 1.6;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: 0.01em;
 }
 
 .lyrics p.active {
   color: #333;
-  font-size: 1.15rem;
+  font-size: 1.5rem;
   font-weight: 600;
   opacity: 1;
   transform: scale(1.05);
+  margin: 24px 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 /* 播放控制区域 */
@@ -896,6 +929,7 @@ onUnmounted(() => {
   box-shadow: 0 6px 16px rgba(74, 144, 226, 0.35);
 }
 
+/* 为移动设备优化歌词大小 */
 @media (max-width: 480px) {
   .music-list {
     padding: 16px;
@@ -910,11 +944,13 @@ onUnmounted(() => {
   }
   
   .lyrics p {
-    font-size: 0.95rem;
+    font-size: 1.1rem;
+    margin: 18px 0;
   }
   
   .lyrics p.active {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
+    margin: 22px 0;
   }
 }
 
@@ -938,7 +974,7 @@ onUnmounted(() => {
 
 .lyrics-loading, .no-lyrics {
   color: #888;
-  font-size: 1rem;
+  font-size: 1.2rem;
   padding: 20px;
   text-align: center;
   width: 100%;
@@ -999,12 +1035,81 @@ onUnmounted(() => {
   height: 100%;
   max-width: none;
   border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 0;
 }
 
 .music-player:fullscreen .player-view,
 .music-player:-webkit-full-screen .player-view,
 .music-player:-ms-fullscreen .player-view {
-  height: 100vh;
+  height: 100%;
   max-height: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.music-player:fullscreen .player-header,
+.music-player:-webkit-full-screen .player-header,
+.music-player:-ms-fullscreen .player-header {
+  padding: 24px;
+  border-bottom-width: 2px;
+}
+
+.music-player:fullscreen .player-header h3,
+.music-player:-webkit-full-screen .player-header h3,
+.music-player:-ms-fullscreen .player-header h3 {
+  font-size: 1.5rem;
+  max-width: 60%;
+}
+
+.music-player:fullscreen .lyrics-container,
+.music-player:-webkit-full-screen .lyrics-container,
+.music-player:-ms-fullscreen .lyrics-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.music-player:fullscreen .lyrics,
+.music-player:-webkit-full-screen .lyrics,
+.music-player:-ms-fullscreen .lyrics {
+  flex: 1;
+  padding-top: 50px;
+}
+
+.music-player:fullscreen .lyrics p,
+.music-player:-webkit-full-screen .lyrics p,
+.music-player:-ms-fullscreen .lyrics p {
+  font-size: 1.4rem;
+  margin: 24px 0;
+}
+
+.music-player:fullscreen .lyrics p.active,
+.music-player:-webkit-full-screen .lyrics p.active,
+.music-player:-ms-fullscreen .lyrics p.active {
+  font-size: 1.8rem;
+  margin: 30px 0;
+}
+
+.music-player:fullscreen .player-controls,
+.music-player:-webkit-full-screen .player-controls,
+.music-player:-ms-fullscreen .player-controls {
+  padding: 30px;
+}
+
+.music-player:fullscreen .control-buttons,
+.music-player:-webkit-full-screen .control-buttons,
+.music-player:-ms-fullscreen .control-buttons {
+  margin-top: 20px;
+}
+
+.music-player:fullscreen .play-btn,
+.music-player:-webkit-full-screen .play-btn,
+.music-player:-ms-fullscreen .play-btn {
+  width: 80px;
+  height: 80px;
 }
 </style>
