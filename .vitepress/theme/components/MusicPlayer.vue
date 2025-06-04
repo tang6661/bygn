@@ -74,11 +74,11 @@
         </div>
 
         <div class="player-controls">
-          <div class="progress-bar">
-            <input type="range" min="0" :max="duration" v-model="currentTime" @input="seek" step="0.1">
+      <div class="progress-bar">
+        <input type="range" min="0" :max="duration" v-model="currentTime" @input="seek" step="0.1">
             <div class="time-display">
-              <span>{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</span>
-            </div>
+        <span>{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</span>
+      </div>
           </div>
 
           <div class="control-buttons">
@@ -100,9 +100,9 @@
                 <path fill="currentColor" d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
               </svg>
             </button>
-          </div>
-        </div>
       </div>
+    </div>
+    </div>
     </transition>
   </div>
 </template>
@@ -183,7 +183,7 @@ const isCurrentLine = (line) => {
   }
   if (currentLineIndex !== -1) {
     scrollToActiveLyric(currentLineIndex);
-    return line === currentLyrics.value[currentLineIndex];
+  return line === currentLyrics.value[currentLineIndex];
   }
   return false;
 };
@@ -281,14 +281,14 @@ const togglePlayPause = () => {
 
 const updateProgress = () => {
   if (audioPlayer.value) {
-    currentTime.value = audioPlayer.value.currentTime;
-    duration.value = audioPlayer.value.duration;
+  currentTime.value = audioPlayer.value.currentTime;
+  duration.value = audioPlayer.value.duration;
   }
 };
 
 const seek = () => {
   if (audioPlayer.value) {
-    audioPlayer.value.currentTime = currentTime.value;
+  audioPlayer.value.currentTime = currentTime.value;
   }
 };
 
@@ -529,7 +529,6 @@ onUnmounted(() => {
 <style scoped>
 .music-player {
   width: 100%;
-  max-width: 500px;
   margin: 0 auto;
   border-radius: 16px;
   background-color: #fff;
@@ -637,7 +636,6 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  max-height: 700px;
   background: linear-gradient(180deg, #fff 0%, #f8f9fa 100%);
 }
 
@@ -672,7 +670,6 @@ onUnmounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 300px;
 }
 
 .back-button, .options-button {
