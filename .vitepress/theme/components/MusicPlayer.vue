@@ -444,13 +444,30 @@ const toggleOptionsMenu = () => {
 
 const toggleFullscreen = () => {
   if (!isFullscreen.value) {
-    // 进入全屏
-    if (musicPlayerContainer.value.requestFullscreen) {
-      musicPlayerContainer.value.requestFullscreen();
-    } else if (musicPlayerContainer.value.webkitRequestFullscreen) { /* Safari */
-      musicPlayerContainer.value.webkitRequestFullscreen();
-    } else if (musicPlayerContainer.value.msRequestFullscreen) { /* IE11 */
-      musicPlayerContainer.value.msRequestFullscreen();
+    // 检测设备类型
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    // 如果是移动设备，尝试锁定屏幕方向为竖屏
+    if (isMobile && window.screen && window.screen.orientation && window.screen.orientation.lock) {
+      try {
+        // 先锁定屏幕方向为竖屏，再请求全屏
+        window.screen.orientation.lock('portrait')
+          .then(() => {
+            requestFullscreen();
+          })
+          .catch(err => {
+            console.warn('无法锁定为竖屏方向:', err);
+            // 即使锁定失败也尝试全屏
+            requestFullscreen();
+          });
+      } catch (e) {
+        console.warn('屏幕方向锁定不受支持:', e);
+        // 继续尝试全屏
+        requestFullscreen();
+      }
+    } else {
+      // 非移动设备直接全屏
+      requestFullscreen();
     }
   } else {
     // 退出全屏
@@ -461,8 +478,28 @@ const toggleFullscreen = () => {
     } else if (document.msExitFullscreen) { /* IE11 */
       document.msExitFullscreen();
     }
+    
+    // 退出全屏时解锁屏幕方向
+    if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
+      try {
+        window.screen.orientation.unlock();
+      } catch (e) {
+        console.warn('屏幕方向解锁不受支持:', e);
+      }
+    }
   }
   toggleOptionsMenu(); // 关闭菜单
+};
+
+// 辅助函数，处理请求全屏
+const requestFullscreen = () => {
+  if (musicPlayerContainer.value.requestFullscreen) {
+    musicPlayerContainer.value.requestFullscreen({ navigationUI: "hide" });
+  } else if (musicPlayerContainer.value.webkitRequestFullscreen) { /* Safari */
+    musicPlayerContainer.value.webkitRequestFullscreen();
+  } else if (musicPlayerContainer.value.msRequestFullscreen) { /* IE11 */
+    musicPlayerContainer.value.msRequestFullscreen();
+  }
 };
 
 // 监听全屏变化
@@ -470,6 +507,20 @@ const handleFullscreenChange = () => {
   isFullscreen.value = !!document.fullscreenElement || 
                        !!document.webkitFullscreenElement || 
                        !!document.msFullscreenElement;
+};
+
+// 处理屏幕方向变化
+const handleOrientationChange = () => {
+  // 如果在全屏模式下发生方向变化，尝试锁定回原来的方向
+  if (isFullscreen.value && window.screen && window.screen.orientation && window.screen.orientation.lock) {
+    try {
+      // 锁定为竖屏方向
+      window.screen.orientation.lock('portrait')
+        .catch(err => console.warn('无法锁定为竖屏方向:', err));
+    } catch (e) {
+      console.warn('屏幕方向锁定不受支持:', e);
+    }
+  }
 };
 
 // 监听全屏变化，调整容器
@@ -494,10 +545,23 @@ onMounted(() => {
     adjustLyricsContainer();
   }
   
+  // 添加禁止屏幕自动旋转的meta标签
+  const metaOrientationTag = document.createElement('meta');
+  metaOrientationTag.name = 'viewport';
+  metaOrientationTag.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, orientation=portrait';
+  document.head.appendChild(metaOrientationTag);
+  
   // 添加全屏变化事件监听
   document.addEventListener('fullscreenchange', handleFullscreenChange);
   document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
   document.addEventListener('msfullscreenchange', handleFullscreenChange);
+  
+  // 添加屏幕方向变化监听
+  if (window.screen && window.screen.orientation) {
+    window.screen.orientation.addEventListener('change', handleOrientationChange);
+  } else if (window.orientation !== undefined) {
+    window.addEventListener('orientationchange', handleOrientationChange);
+  }
   
   // 添加点击外部关闭菜单的事件监听
   document.addEventListener('click', handleClickOutside);
@@ -523,6 +587,19 @@ onUnmounted(() => {
   document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
   document.removeEventListener('msfullscreenchange', handleFullscreenChange);
   document.removeEventListener('click', handleClickOutside);
+  
+  // 移除屏幕方向变化监听
+  if (window.screen && window.screen.orientation) {
+    window.screen.orientation.removeEventListener('change', handleOrientationChange);
+  } else if (window.orientation !== undefined) {
+    window.removeEventListener('orientationchange', handleOrientationChange);
+  }
+  
+  // 移除添加的meta标签
+  const metaOrientationTag = document.querySelector('meta[name="viewport"][content*="orientation=portrait"]');
+  if (metaOrientationTag) {
+    document.head.removeChild(metaOrientationTag);
+  }
 });
 </script>
 
@@ -1036,6 +1113,26 @@ onUnmounted(() => {
   flex-direction: column;
   background-color: #fff;
   padding: 0;
+}
+
+/* 处理横屏全屏的情况 */
+@media (orientation: landscape) {
+  .music-player:fullscreen,
+  .music-player:-webkit-full-screen,
+  .music-player:-ms-fullscreen {
+    /* 强制保持竖屏布局，即使在横屏模式下 */
+    width: 100vh;
+    max-width: 100vh;
+    margin: 0 auto;
+  }
+  
+  .music-player:fullscreen .player-view,
+  .music-player:-webkit-full-screen .player-view,
+  .music-player:-ms-fullscreen .player-view {
+    height: 100%;
+    max-width: 100vh;
+    margin: 0 auto;
+  }
 }
 
 .music-player:fullscreen .player-view,
