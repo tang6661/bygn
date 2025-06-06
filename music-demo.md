@@ -38,19 +38,24 @@ const musicTracks = ref([
     lyricsUrl: '/bygn/lyrics/同路人(1).lrc' 
   },
 {
-    title: '第72首',
+    title: '我愿爱祢更深',
     url: '/bygn/sg/第72首.mp3', 
     lyricsUrl: '/bygn/lyrics/第72首.lrc' 
   },
 {
-    title: '第260首',
+    title: '福哉，爱的捆绑',
     url: '/bygn/sg/第260首.mp3', 
     lyricsUrl: '/bygn/lyrics/第260首.lrc' 
   },
 {
-    title: '第265首',
+    title: '有一地比正午更光明',
     url: '/bygn/sg/第265首.mp3', 
     lyricsUrl: '/bygn/lyrics/第265首.lrc' 
+  },
+{
+    title: '维亚多勒罗沙',
+    url: '/bygn/sg/维亚多勒罗沙(1).mp3', 
+    lyricsUrl: '/bygn/lyrics/维亚多勒罗沙(1).lrc' 
   },
 ]);
 </script>
