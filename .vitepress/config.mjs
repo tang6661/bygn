@@ -65,7 +65,7 @@ export default defineConfig({
       { icon: 'gitee', link: 'https://gitee.com/Aa520042/vite-press' }
     ],
     footer: {
-      copyright: 'Copyright © 2025-present Evan You'
+      copyright: 'Copyright © 2026-present Evan You'
     },
     lastUpdated: {
       text: '文档更新于',
