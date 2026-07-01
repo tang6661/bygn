@@ -57,6 +57,7 @@ export default defineConfig({
           { text: 'Runtime API Examples', link: '/api-examples' },
           { text: '毕业感恩', link: '/graduation-gratitude' },
           { text: '诗歌集', link: '/music-demo' },
+          { text: '圣经', link: '/sj/SUMMARY' },
         ],
       },
     ],
